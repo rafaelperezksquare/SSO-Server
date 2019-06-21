@@ -10,26 +10,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.ksquare.sso.domain.ApiErrorResponse;
+
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler 
   extends ResponseEntityExceptionHandler {
  
     @ExceptionHandler(value = { RuntimeException.class})
     protected ResponseEntity<Object> handleConflict(RuntimeException exception, WebRequest request) {
-        String bodyOfResponse = "Something went wrong";
+        String responseBody = "Something went wrong";
         HttpStatus status = HttpStatus.NOT_FOUND;
         
         if(exception.getClass() == InvalidDataAccessApiUsageException.class) {
-    		bodyOfResponse = "Invalid parameter in the path.";
+    		responseBody = "Invalid parameter in the path.";
     	}
     	if(exception.getClass() == NullPointerException.class) {
-    		bodyOfResponse = "Invalid parameter in the path or in the body.";
+    		responseBody = "Invalid parameter in the path or in the body.";
     	}
     	if(exception.getClass() == DataIntegrityViolationException.class) {
-    		bodyOfResponse = "Trying to duplicate a resource.";
+    		responseBody = "Trying to duplicate a resource.";
     		status = HttpStatus.CONFLICT;
     	}
+    	
+    	ApiErrorResponse apiErrorResponse = new ApiErrorResponse(status, responseBody);
         
-        return handleExceptionInternal(exception, bodyOfResponse, new HttpHeaders(), status, request);
+        return new ResponseEntity<>(apiErrorResponse, status);
     }
 }
