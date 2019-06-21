@@ -1,5 +1,6 @@
 package com.ksquare.sso.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.ksquare.sso.domain.User;
+import com.ksquare.sso.domain.UserDTO;
 import com.ksquare.sso.domain.UserRole;
 import com.ksquare.sso.repository.UserRepository;
 
@@ -26,24 +28,34 @@ public class UserServiceImpl implements UserService {
 	PasswordEncoder passwordEncoder;
 
 	@Override
-	public List<User> getUsers() {
-		return Lists.newArrayList(userRepository.findAll());
+	public List<UserDTO> getUsers() {
+		ArrayList<User> users = Lists.newArrayList(userRepository.findAll());
+		ArrayList<UserDTO> usersDTO = new ArrayList<UserDTO>();
+		for(User user : users) {
+			UserDTO userDTO = new UserDTO(user);
+			usersDTO.add(userDTO);
+		}
+		return usersDTO;
 	}
 	
 	@Override
-	public User getUser(Long id) {
-		return userRepository.findOne(id);
+	public UserDTO getUser(Long id) {
+		UserDTO userDTO = new UserDTO(userRepository.findOne(id));
+		return userDTO;
 	}
 
 	@Override
-	public User getUser(String username) {
-		return userRepository.findByUsername(username);
+	public UserDTO getUser(String username) {
+		UserDTO userDTO = new UserDTO(userRepository.findByUsername(username));
+		return userDTO;
 	}
 
 	@Override
-	public User addUser(User user) {
+	public UserDTO addUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		return userRepository.save(user);
+		userRepository.save(user);
+		UserDTO userDTO = new UserDTO(user);
+		return userDTO;
 	}
 
 	@Override
@@ -52,12 +64,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUser(String username, User user) {
+	public UserDTO updateUser(String username, User user) {
 		User userToUpdate = userRepository.findByUsername(username);
 		userToUpdate.setUsername(user.getUsername());
 		userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
 		userToUpdate.setRoles(user.getRoles());
-		return userRepository.save(userToUpdate);
+		userRepository.save(userToUpdate);
+		UserDTO userDTO = new UserDTO(userToUpdate);
+		return userDTO;
 	}
 	
 	@Override

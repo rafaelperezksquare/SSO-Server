@@ -1,5 +1,6 @@
 package com.ksquare.sso.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.ksquare.sso.domain.OauthClientDetails;
+import com.ksquare.sso.domain.OauthClientDetailsDTO;
 import com.ksquare.sso.repository.OauthClientDetailsRepository;
 
 @Service("oauthClientDetailsService")
@@ -29,25 +31,35 @@ public class OauthClientDetailsServiceImpl implements OauthClientDetailsService 
 	}
 
 	@Override
-	public List<OauthClientDetails> getAPIclients() {
-		return Lists.newArrayList(oauthClientDetailsRepository.findAll());
+	public List<OauthClientDetailsDTO> getAPIclients() {
+		ArrayList<OauthClientDetails> clients = Lists.newArrayList(oauthClientDetailsRepository.findAll()); 
+		ArrayList<OauthClientDetailsDTO> clientsDTO = new ArrayList<OauthClientDetailsDTO>();
+		for(OauthClientDetails client : clients) {
+			OauthClientDetailsDTO clientDTO = new OauthClientDetailsDTO(client);
+			clientsDTO.add(clientDTO);
+		}
+		return clientsDTO;
 	}
 
 	@Override
-	public OauthClientDetails getAPIclient(String id) {
-		return oauthClientDetailsRepository.findOne(id);
+	public OauthClientDetailsDTO getAPIclient(String id) {
+		OauthClientDetails client = oauthClientDetailsRepository.findOne(id);
+		OauthClientDetailsDTO clientDTO = new OauthClientDetailsDTO(client); 
+		return clientDTO;
 	}
 
 	@SuppressWarnings("static-access")
 	@Override
-	public OauthClientDetails addAPIclient(OauthClientDetails client) {
+	public OauthClientDetailsDTO addAPIclient(OauthClientDetails client) {
 		client.setSecret(randomStringUtils.randomAlphabetic(PASS_SIZE));
-		return oauthClientDetailsRepository.save(client);
+		oauthClientDetailsRepository.save(client);
+		OauthClientDetailsDTO clientDTO = new OauthClientDetailsDTO(client); 
+		return clientDTO;
 	}
 
 	@SuppressWarnings("static-access")
 	@Override
-	public OauthClientDetails updateAPIclient(String id, OauthClientDetails client) {
+	public OauthClientDetailsDTO updateAPIclient(String id, OauthClientDetails client) {
 		OauthClientDetails updatedClient =  oauthClientDetailsRepository.findOne(id);
 		updatedClient.setId(client.getId());
 		updatedClient.setResourceId(client.getResourceId());
@@ -60,7 +72,9 @@ public class OauthClientDetailsServiceImpl implements OauthClientDetailsService 
 		updatedClient.setRefreshTokenValidity(client.getRefreshTokenValidity());
 		updatedClient.setAdditionalInfo(client.getAdditionalInfo());
 		updatedClient.setAutoapprove(client.getAutoapprove());
-		return oauthClientDetailsRepository.save(updatedClient);
+		oauthClientDetailsRepository.save(updatedClient);
+		OauthClientDetailsDTO clientDTO = new OauthClientDetailsDTO(updatedClient); 
+		return clientDTO;
 	}
 
 	@Override

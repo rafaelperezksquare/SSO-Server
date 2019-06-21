@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ksquare.sso.domain.OauthClientDetails;
+import com.ksquare.sso.domain.OauthClientDetailsDTO;
 import com.ksquare.sso.service.OauthClientDetailsService;
 
 import io.swagger.annotations.ApiOperation;
@@ -40,9 +41,9 @@ public class OauthClientDetailsController {
 			response = OauthClientDetails.class,
 			responseContainer = "List")
 	public ResponseEntity<?> getAllClientAPI(){
-		List<OauthClientDetails> clients = oauthClientDetailsService.getAPIclients();
+		List<OauthClientDetailsDTO> clientsDTO = oauthClientDetailsService.getAPIclients();
 		logger.info("Listing all API clients");
-		return new ResponseEntity<>(clients, HttpStatus.OK);
+		return new ResponseEntity<>(clientsDTO, HttpStatus.OK);
 	}
 	
 	/**
@@ -56,9 +57,9 @@ public class OauthClientDetailsController {
 			notes = "Returns the API client information of the client with the id provided",
 			response = OauthClientDetails.class)
 	public ResponseEntity<?> getClientAPI(@PathVariable String clientid){
-		OauthClientDetails client = oauthClientDetailsService.getAPIclient(clientid);
+		OauthClientDetailsDTO clientDTO = oauthClientDetailsService.getAPIclient(clientid);
 		logger.info("Returning API client of " + clientid);
-		return new ResponseEntity<>(client, HttpStatus.OK);
+		return new ResponseEntity<>(clientDTO, HttpStatus.OK);
 	}
 	
 	/**
@@ -74,8 +75,8 @@ public class OauthClientDetailsController {
     		response = OauthClientDetails.class)
 	public ResponseEntity<?> addClientAPI(@RequestBody OauthClientDetails client){
 		logger.info("Adding APLI client " + client.getId());
-		OauthClientDetails newClient = oauthClientDetailsService.addAPIclient(client);
-		return new ResponseEntity<>(newClient, HttpStatus.CREATED);
+		OauthClientDetailsDTO clientDTO = oauthClientDetailsService.addAPIclient(client);
+		return new ResponseEntity<>(clientDTO, HttpStatus.CREATED);
 	}
 	
 	
@@ -92,8 +93,8 @@ public class OauthClientDetailsController {
             notes = "Updates an API client info. Receives the clientid in the path and a Client object with the updated user info in the request body")
     public ResponseEntity<?> updateClientAPI(@PathVariable String clientid, @RequestBody OauthClientDetails client){
         logger.info("Updating API client " + client.getId());
-        oauthClientDetailsService.updateAPIclient(clientid, client);
-        return new ResponseEntity<>(HttpStatus.OK);
+        OauthClientDetailsDTO clientDTO = oauthClientDetailsService.updateAPIclient(clientid, client);
+        return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 	
 	/**

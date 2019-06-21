@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS sso_server;
-CREATE DATABASE sso_server;
-\c sso_server
+DROP DATABASE IF EXISTS sso_server_db;
+CREATE DATABASE sso_server_db;
+\c sso_server_db
 
 DROP TABLE IF EXISTS USERS;
 CREATE TABLE USERS (

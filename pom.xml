@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.stl.crm</groupId>
-	<artifactId>ksquare-sso</artifactId>
+	<artifactId>sso_server</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
-	<name>ksquare-sso</name>
+	<name>sso_server</name>
 	<description>SSO server with OAuth2 and JWT</description>
 
 
