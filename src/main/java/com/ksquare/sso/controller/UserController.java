@@ -74,44 +74,28 @@ public class UserController {
 	}
 	
 	/**
-	 * Registers a new user to the server with USER role.
+	 * Registers a new user to the server.
 	 * Returns the newly created user and an HTTP CREATED status code.
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST,
+	@RequestMapping(value = "/{admin}", method = RequestMethod.POST,
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@ApiOperation(value = "addUser",
-			notes = "Creates a new user. Receives a User object with the user info in the request body",
+			notes = "Creates a new user. Receives a User object with the user info in the request body "
+			+ "and a boolean path variable wich determines if the rol of the user is going to be user or admin.",
 		    response = User.class)
-	public ResponseEntity<?> addUser(@RequestBody User user) {
+	public ResponseEntity<?> addUser(@PathVariable boolean admin, @RequestBody User user) {
 		logger.info("Adding user " + user.getUsername());
-		user.setRoles(Arrays.asList(new UserRole("USER")));
+		user.setRoles(admin? 
+				Arrays.asList(new UserRole("USER"), new UserRole("ADMIN")) 
+				: Arrays.asList(new UserRole("USER")));
 		UserDTO userDTO = userService.addUser(user);
 		return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
 	}
 	
-	/**
-	 * Registers a new user to the server with ADMIN and USER role.
-	 * Returns the newly created user and an HTTP CREATED status code.
-	 * @param user
-	 * @return
-	 */
-	@RequestMapping(value = "/admin", method = RequestMethod.POST,
-            produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	@ApiOperation(value = "addAdminUser",
-			notes = "Creates a new user with admin privileges. Receives a User object with the user info in the request body",
-		    response = User.class)
-	public ResponseEntity<?> addAdminUser(@RequestBody User user) {
-		logger.info("Adding user " + user.getUsername());
-		user.setRoles(Arrays.asList(new UserRole("ADMIN"), new UserRole("USER")));
-		UserDTO userDTO = userService.addUser(user);
-		return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
-	}
 	
 	/**
 	 * Updates the user information of the user name provided
@@ -126,8 +110,7 @@ public class UserController {
 			notes = "Updates a user info. Receives the username in the path and a User object with the updated user info in the request body")
 	public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User user) {
 		logger.info("Updated user info of " + username);
-		userService.updateUser(username, user);
-		UserDTO userDTO = new UserDTO(user);
+		UserDTO userDTO = userService.updateUser(username, user);
 		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
 	

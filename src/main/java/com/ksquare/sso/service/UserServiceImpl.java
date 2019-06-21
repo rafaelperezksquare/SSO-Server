@@ -32,30 +32,26 @@ public class UserServiceImpl implements UserService {
 		ArrayList<User> users = Lists.newArrayList(userRepository.findAll());
 		ArrayList<UserDTO> usersDTO = new ArrayList<UserDTO>();
 		for(User user : users) {
-			UserDTO userDTO = new UserDTO(user);
-			usersDTO.add(userDTO);
+			usersDTO.add(new UserDTO(user));
 		}
 		return usersDTO;
 	}
 	
 	@Override
 	public UserDTO getUser(Long id) {
-		UserDTO userDTO = new UserDTO(userRepository.findOne(id));
-		return userDTO;
+		return new UserDTO(userRepository.findOne(id));
 	}
 
 	@Override
 	public UserDTO getUser(String username) {
-		UserDTO userDTO = new UserDTO(userRepository.findByUsername(username));
-		return userDTO;
+		return new UserDTO(userRepository.findByUsername(username));
 	}
 
 	@Override
 	public UserDTO addUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
-		UserDTO userDTO = new UserDTO(user);
-		return userDTO;
+		return new UserDTO(user);
 	}
 
 	@Override
@@ -66,12 +62,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDTO updateUser(String username, User user) {
 		User userToUpdate = userRepository.findByUsername(username);
-		userToUpdate.setUsername(user.getUsername());
-		userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
-		userToUpdate.setRoles(user.getRoles());
-		userRepository.save(userToUpdate);
-		UserDTO userDTO = new UserDTO(userToUpdate);
-		return userDTO;
+		if(user.getUsername() != null) {
+			userToUpdate.setUsername(user.getUsername());
+		}
+		if(user.getPassword() != null) {
+			userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+		}
+		if(user.getRoles() != null) {
+			userToUpdate.setRoles(user.getRoles());
+		}
+		return new UserDTO(userRepository.save(userToUpdate));
 	}
 	
 	@Override
