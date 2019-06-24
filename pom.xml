@@ -12,13 +12,12 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>4.3.6.RELEASE</org.springframework.version>
-		<jackson.version>2.7.5</jackson.version>
-		<spring-data-jpa.version>1.11.1.RELEASE</spring-data-jpa.version>
-		<hibernate.version>4.2.6.Final</hibernate.version>
-		<h2database.version>1.4.193</h2database.version>
-		<springsecurity.version>4.1.1.RELEASE</springsecurity.version>
-		<springsecurityoauth2.version>2.0.10.RELEASE</springsecurityoauth2.version>
+		<org.springframework.version>5.1.8.RELEASE</org.springframework.version>
+		<jackson.version>2.9.9</jackson.version>
+		<spring-data-jpa.version>2.1.9.RELEASE</spring-data-jpa.version>
+		<hibernate.version>5.4.3.Final</hibernate.version>
+		<springsecurity.version>5.1.5.RELEASE</springsecurity.version>
+		<springsecurityoauth2.version>2.3.6.RELEASE</springsecurityoauth2.version>
 		<!-- <springfox.version>2.9.2</springfox.version> -->
 	</properties>
 
@@ -28,11 +27,11 @@
 			<artifactId>spring-core</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${org.springframework.version}</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -195,7 +194,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.2.3</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>

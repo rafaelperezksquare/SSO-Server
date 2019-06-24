@@ -3,6 +3,7 @@ package com.ksquare.sso.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -39,7 +40,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public UserDTO getUser(Long id) {
-		return new UserDTO(userRepository.findOne(id));
+		Optional<User> optionalUser = userRepository.findById(id);
+		return new UserDTO(optionalUser.get());
 	}
 
 	@Override
